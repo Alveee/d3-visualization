@@ -16,7 +16,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  public async readCsvAndReturnData(): Promise<Observable<IEntity[]>> {
+  public async readCsvAndReturnData(): Promise<IEntity[]> {
     const filePath = __dirname + '/../storage/interactive_data.csv';
     const parseStream = csv({});
     const data = await getStream.array(
@@ -29,6 +29,6 @@ export class AppService {
         renewables: x.renewables,
       };
     });
-    return of(entities);
+    return entities;
   }
 }

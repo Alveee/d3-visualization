@@ -1,5 +1,5 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AppService } from './app.service';
 
 export interface IEntity {
@@ -17,7 +17,11 @@ export class AppController {
   }
 
   @Get('/data')
-  public async readCsvAndReturnData(): Promise<Observable<IEntity[]>> {
-    return await this.appService.readCsvAndReturnData();
+  public async readCsvAndReturnData(@Res() res: Response): Promise<any> {
+    const entities = await this.appService.readCsvAndReturnData();
+    return res.status(HttpStatus.OK).json({
+      status: 'success',
+      data: entities,
+    });
   }
 }
