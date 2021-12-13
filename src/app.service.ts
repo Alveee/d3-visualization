@@ -2,13 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
 import * as getStream from 'get-stream';
-import { Observable, of } from 'rxjs';
-
-export type IEntity = {
-  state: string;
-  date: string;
-  renewables: number;
-};
+import { IEntity } from './interfaces/IEntity';
+import { IGraphData } from './interfaces/IGraphData';
 
 @Injectable()
 export class AppService {
@@ -16,7 +11,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  public async readCsvAndReturnData(): Promise<IEntity[]> {
+  public async readCsvAndReturnData(): Promise<IGraphData[]> {
     const filePath = __dirname + '/../storage/interactive_data.csv';
     const parseStream = csv({});
     const data = await getStream.array(
@@ -25,10 +20,27 @@ export class AppService {
     const entities = data.map((x: IEntity) => {
       return {
         state: x.state,
-        date: x.date,
+        year: new Date(x.date).getFullYear().toString(),
         renewables: x.renewables,
       };
     });
-    return entities;
+
+    return this.getFormattedData(entities);
+  }
+
+  private getFormattedData(entities): IGraphData[] {
+    const formattedResult: IGraphData[] = [];
+    entities.reduce((res: IGraphData, value) => {
+      if (!res[value.year]) {
+        res[value.year] = {
+          renewables: 0,
+          year: value.year,
+        };
+        formattedResult.push(res[value.year]);
+      }
+      res[value.year].renewables += parseFloat(value.renewables);
+      return res;
+    }, {});
+    return formattedResult;
   }
 }
