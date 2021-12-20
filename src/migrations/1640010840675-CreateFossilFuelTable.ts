@@ -10,6 +10,8 @@ export class CreateFossilFuelTable1640009479662 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'state',
