@@ -14,6 +14,6 @@ export default registerAs(
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     entities: [FossilFuel],
-    synchronize: process.env.NODE_ENV !== 'prod',
+    synchronize: process.env.NODE_ENV !== 'production',
   }),
 );
