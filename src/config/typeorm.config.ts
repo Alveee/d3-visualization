@@ -15,5 +15,8 @@ export default registerAs(
     database: process.env.DATABASE_NAME,
     entities: [FossilFuel],
     synchronize: process.env.NODE_ENV !== 'production',
+    extra: {
+      ssl: process.env.NODE_ENV === 'production',
+    },
   }),
 );
