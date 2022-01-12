@@ -12,7 +12,6 @@ import { FossilFuelModule } from './fossil-fuels/fossil-fuel.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
       load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
