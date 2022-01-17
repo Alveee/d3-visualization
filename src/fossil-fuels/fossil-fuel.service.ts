@@ -15,10 +15,10 @@ export class FossilFuelService {
       `SELECT state, sum(renewables) as renewables FROM fossil_fuels WHERE EXTRACT (YEAR FROM date) = '${year}' GROUP BY state ORDER BY renewables DESC`,
     );
 
-    let totalRenewables = 0;
-    data.map((item) => {
-      totalRenewables += item.renewables;
-    });
+    const totalRenewables = data.reduce(
+      (total, item) => total + item.renewables,
+      0,
+    );
 
     data.map(
       (item) => (item.renewables = (item.renewables / totalRenewables) * 100),
