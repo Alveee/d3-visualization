@@ -12,16 +12,8 @@ export class FossilFuelService {
 
   public async getHorizontalBarDataByYear(year: number): Promise<any> {
     const data = await this.fossilFuelRepository.query(
-      `SELECT state, sum(renewables) as renewables FROM fossil_fuels WHERE EXTRACT (YEAR FROM date) = '${year}' GROUP BY state ORDER BY renewables DESC`,
-    );
-
-    const totalRenewables = data.reduce(
-      (total, item) => total + item.renewables,
-      0,
-    );
-
-    data.map(
-      (item) => (item.renewables = (item.renewables / totalRenewables) * 100),
+      `SELECT state, avg((renewables/(coal+natural_gas+nuclear+other+other_gases+petroleum_coke+petroleum_liquids+renewables))*100) as renewables FROM fossil_fuels WHERE EXTRACT (YEAR FROM date) = '${year}' GROUP BY state ORDER BY renewables DESC
+      `,
     );
     return data;
   }
